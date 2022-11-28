@@ -8,6 +8,7 @@ export default class Todo extends Component {
     this.state = {
       todo_array: [],
       task: '',
+      department:'',
       edit_task: '',
     };
   }
@@ -16,11 +17,17 @@ export default class Todo extends Component {
       task: e.target.value,
     });
   };
+  onChangeDepartment = e => {
+    this.setState ({
+      department: e.target.value,
+    });
+  };
   addTask = () => {
-    let {todo_array, task} = this.state;
+    let {todo_array, task,department} = this.state;
     let obj = {
       id: todo_array.length == 0 ? 1 : todo_array[todo_array.length - 1].id + 1,
       name: task,
+      department:department,
       is_editing: false,
       is_done: false,
     };
@@ -28,13 +35,18 @@ export default class Todo extends Component {
     this.setState ({
       todo_array: todo_array,
       task: '',
+      department:'',
     });
   };
+ 
+
   edit = object => {
     let {todo_array} = this.state;
 
     let i = todo_array.findIndex (task => task.id === object.id);
+    let d = todo_array.findIndex (department => department.id === object.id);
     todo_array[i].is_editing = !todo_array[i].is_editing;
+    todo_array[d].is_editing = !todo_array[d].is_editing;
 
     todo_array.map (task => {
       task.id !== object.id
@@ -42,9 +54,16 @@ export default class Todo extends Component {
         : (task.is_editing = task.is_editing);
       return task;
     });
+    todo_array.map (department => {
+      department.id !== object.id
+        ? (department.is_editing = false)
+        : (department.is_editing = department.is_editing);
+      return department;
+    });
     this.setState ({
       todo_array: todo_array,
       edit_task: object.name,
+      edit_department: object.name,
     });
   };
   editTask = task => {
@@ -52,16 +71,24 @@ export default class Todo extends Component {
       edit_task: task,
     });
   };
+  editDepartment = department => {
+    this.setState ({
+      edit_department: department,
+    });
+  };
 
   saveEditTask = object => {
-    let {todo_array, edit_task} = this.state;
+    let {todo_array, edit_task,edit_department} = this.state;
     let i = todo_array.findIndex (task => task.id === object.id);
+    let d = todo_array.findIndex (department => department.id === object.id);
     todo_array[i].name = edit_task;
+    todo_array[d].department = edit_department;
 
     this.setState (
       {
         todo_array: todo_array,
         edit_task: '',
+        edit_department:'',
       },
       e => {
         this.edit (object);
@@ -71,7 +98,9 @@ export default class Todo extends Component {
   delete = object => {
     let {todo_array} = this.state;
     let i = todo_array.findIndex (task => task.id === object.id);
+    let d = todo_array.findIndex (department => department.id === object.id);
     todo_array.splice (i, 1);
+    todo_array.splice (d, 1);
     this.setState ({
       todo_array: todo_array,
     });
@@ -80,7 +109,8 @@ export default class Todo extends Component {
   done = object => {
     let {todo_array} = this.state;
     let i = todo_array.findIndex (task => task.id === object.id);
-    todo_array[i].is_done = true;
+    let d = todo_array.findIndex (department => department.id === object.id);
+    todo_array[d].is_done = true;
 
     this.setState ({
       todo_array: todo_array,
@@ -100,20 +130,19 @@ render () {
     onChange={this.onChangeTask}
    placeholder="Name"
      />
-   
 <textarea
     id="standard-basic"
    autoComplete="off"
-  value={this.state.task}
-    onChange={this.onChangeTask}
-   placeholder="gender"
+  value={this.state.department}
+    onChange={this.onChangeDepartment}
+   placeholder="department"
      />
     <button
   style={{color:"white", padding:"6px 40px " ,fontSize:"20px", backgroundColor:"navy"}} 
      variant="contained"
      color="primary"
      size="small"
-     disabled={this.state.task == ''}
+     disabled={this.state.task.department == ''}
      onClick={this.addTask}> Add Employee</button>
 <table style={{marginTop:"50px", display: "flex"}}>
 				<thead>
