@@ -1,0 +1,19 @@
+#navbar {
+    display: flex;
+    justify-content: space-around;
+    width: 100vw;
+    background-color: #f8f9fa;
+ margin-top: 20px;
+    padding: 20px;
+  }
+  #navbarlogo{
+    margin-left: -450px;
+  }
+#maindiv{
+    height: 150px;
+    width:1400px;
+    border: 1px solid rgb(91, 91, 91);
+    margin-top: 50px;
+    margin-left: 70px;
+}
+  
